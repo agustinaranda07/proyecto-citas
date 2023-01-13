@@ -1,12 +1,23 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Error from "./Error";
 
-function Formulario({pacientes, setPacientes}) {
+function Formulario({pacientes, setPacientes,paciente,setPaciente}) {
   const [cliente, setCliente] = useState("");
   const [apellido, setApellido] = useState("");
   const [celular, setCelular] = useState("");
   const [fecha, setFecha] = useState("");
   const [tratamiento, setTratamiento] = useState("");
+ 
+  useEffect(() =>{
+    if(Object.keys(paciente).length > 0){
+      setCliente(paciente.cliente)
+      setApellido(paciente.apellido)
+      setCelular(paciente.celular)
+      setFecha(paciente.fecha)
+      setTratamiento(paciente.tratamiento)
+    }
+  },[paciente])
+
 
   const [error,setError] = useState(false)
 
@@ -19,7 +30,7 @@ function Formulario({pacientes, setPacientes}) {
   const handleSubmit = (e) =>{
     e.preventDefault();
     //validando el formulario
-    if([cliente,fecha,tratamiento].includes("")){
+    if([cliente,apellido,celular,fecha,tratamiento].includes("")){
       setError(true)
       return;
     }else{
@@ -32,9 +43,18 @@ function Formulario({pacientes, setPacientes}) {
         celular,
         fecha,
         tratamiento,
-        id: generateId()
       }
-      setPacientes([...pacientes, objetoPaciente])
+      if(paciente.id){
+        //edita el registro
+        objetoPaciente.id = paciente.id
+        const pacientesActualizados = pacientes.map(pacienteOnState => pacienteOnState = paciente.id ? objetoPaciente : pacienteOnState)
+        setPacientes(pacientesActualizados)
+        setPaciente({})
+      }else{
+        //nuevo registro
+        objetoPaciente.id= generateId();
+        setPacientes([...pacientes, objetoPaciente])
+      }
 
       //reinicia el formulario
 
@@ -57,7 +77,7 @@ function Formulario({pacientes, setPacientes}) {
 
       <form className='bg-white shadow-xl rounded-lg py-10 px-5 mb-10' onSubmit={handleSubmit}>
 
-        {error && <Error mensaje="Algunos campos están vacíos" />}
+        {error && <Error mensaje="Todos los campos son obligatorios" />}
         <div className='mb-5'>
           <label htmlFor='cliente' className='block text-gray-700 uppercase font-bold'>Nombre del cliente</label>
           <input id='cliente' type="text" placeholder='Nombre del cliente' className='border w-full p-2 mt-2 placeholder-gray-400 rounded-md' value={cliente} onChange={(e) => setCliente(e.target.value)}/>
@@ -83,7 +103,7 @@ function Formulario({pacientes, setPacientes}) {
           <textarea name="sintomas" id="sintomas" className='border w-full p-2 mt-2 placeholder-gray-400 rounded-md' placeholder='Tratamiento a realizar'  value={tratamiento} onChange={(e) => setTratamiento(e.target.value)}></textarea>
         </div>
 
-        <input type="submit" value="Agregar paciente" className='bg-indigo-500 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-all' />
+        <input type="submit" value={paciente.id ? "Editar paciente" : "Agregar paciente"} className='bg-indigo-500 w-full p-3 text-white uppercase font-bold hover:bg-indigo-700 cursor-pointer transition-all' />
       </form>
     </div>
   )
