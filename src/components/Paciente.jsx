@@ -29,7 +29,7 @@ function Paciente({paciente,setPaciente,eliminarPaciente}) {
           <span className='font-normal normal-case'>{tratamiento}</span>
         </p>
 
-        <div className="flex justify-between mt-10">
+        <div className="flex justify-between mt-10l">
           <button type="button" className="py-2 px-10 bg-indigo-500 hover:bg-indigo-600 text-white font-bold uppercase rounded-lg" onClick={()=>setPaciente(paciente)}>
             Editar
           </button>
