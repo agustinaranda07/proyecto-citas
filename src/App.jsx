@@ -2,6 +2,17 @@ import { useState, useEffect } from "react"
 import Formulario from "./components/Formulario"
 import Header from "./components/Header"
 import ListadoPacientes from "./components/ListadoPacientes"
+import styled from "@emotion/styled"
+import Footer from "./components/Footer"
+
+
+const Container = styled.div`
+  @media(min-width: 992px){
+    display:grid;
+  grid-template-columns: repeat(2,1fr);
+  column-gap:2rem;
+  }
+`
 
 function App() {
   const [pacientes,setPacientes] = useState([]);
@@ -25,16 +36,19 @@ function App() {
     setPacientes(pacientesActualizados)
   }
   return (
+    <>
     <div className="container mx-auto mt-20">
       <Header/>
 
-      <div className="mt-12 flex md:flex">
+      <Container className="mt-12">
 
       <Formulario pacientes={pacientes} setPacientes={setPacientes} paciente={paciente} setPaciente={setPaciente}/>
       
       <ListadoPacientes pacientes={pacientes} setPaciente={setPaciente} eliminarPaciente={eliminarPaciente}/>
-      </div>
+      </Container>
     </div>
+      <Footer></Footer>
+    </>
   )
 }
 
